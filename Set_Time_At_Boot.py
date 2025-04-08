@@ -3,8 +3,9 @@
 from PyMCP2221A import SMBus
 
 import time
+import os
  
-address = 0x68  #i2c address of DS3231
+address = 0x68
 register = 0x00
 CONV = 32
 
@@ -49,19 +50,32 @@ def getTemp(address):
     tdecimal = (byte_tmsb >> 7) * 2**(-1) + ((byte_tmsb & 0x40) >> 6) * 2**(-2)
     return tinteger + tdecimal
  
-ds3231SetTime()
-while 1:
-    t = ds3231ReadTime()
-    t[0] = t[0]&0x7F  #sec
-    t[1] = t[1]&0x7F  #min
-    t[2] = t[2]&0x3F  #hour
-    t[3] = t[3]&0x07  #week
-    t[4] = t[4]&0x3F  #day
-    t[5] = t[5]&0x1F  #month
-    print("20%x/%x/%x %x:%x:%x  %s" %(t[6],t[5],t[4],t[2],t[1],t[0],w[t[3]-1]))
-    time.sleep(1)
+#ds3231SetTime()
 
-    '''Celsius = getTemp(address)
-    Fahrenheit = 9.0/5.0 * Celsius + 32
-    print (Fahrenheit, "*F /", Celsius, "*C")
-    time.sleep(1)'''
+t = ds3231ReadTime()
+t[0] = t[0]&0x7F  #sec
+t[1] = t[1]&0x7F  #min
+t[2] = t[2]&0x3F  #hour
+t[3] = t[3]&0x07  #week
+t[4] = t[4]&0x3F  #day
+t[5] = t[5]&0x1F  #month
+#print('20%x/%x/%x %x:%x:%x  %s' %(t[6],t[5],t[4],t[2],t[1],t[0],w[t[3]-1]))
+time.sleep(1)
+
+year = '20%x' %(t[6])
+month = '%x' %(t[5])
+day = '%x' %(t[4])
+
+hour = '%x' %(t[2])
+minute = '%x' %(t[1])
+sec = '%x' %(t[0])
+
+date_str=year +"-"+ month +"-"+ day
+time_str=hour +":"+ minute +":"+ sec
+
+
+data= ('\''+date_str +" "+ time_str+'\'')
+
+
+dd=os.system("sudo date -s "+data)
+#print(dd)

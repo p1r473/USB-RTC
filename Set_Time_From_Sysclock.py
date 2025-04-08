@@ -11,6 +11,11 @@ address = 0x68
 register = 0x00
 CONV = 32
 
+#hex_string = "0xAA"
+#an_integer = int(hex_string, 16)
+#hex_value = hex(an_integer)
+#print(hex_value)
+
 now = datetime.now()
 day = int(now.strftime("%d"), 16)
 month = int(now.strftime("%m"), 16)
